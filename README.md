@@ -1,11 +1,19 @@
-A `/venmo` bot for [Slack](https://slack.com/).
+# venmobot
 
-Planned usage:
+FIXME
 
-```
-/venmo julian 1.00 thanks for signing us up for slack, this is dope
-```
+## Prerequisites
 
-The first time you pay someone, if you haven't used it before, the bot will private message you an authentication link that uses Venmo's OAuth flow.
+You will need [Leiningen][1] 1.7.0 or above installed.
 
-The bot will only send money to Slack user IDs it has a stored Venmo ID for.
+[1]: https://github.com/technomancy/leiningen
+
+## Running
+
+To start a web server for the application, run:
+
+    lein ring server
+
+## License
+
+Copyright © 2014 FIXME
