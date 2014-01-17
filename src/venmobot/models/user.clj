@@ -1,10 +1,12 @@
 (ns venmobot.models.user
-  :require [clojure.java.jdbc :refer [with-connection insert!]])
+  (:use venmobot.db)
+  (:require [clojure.java.jdbc :refer [query insert!]]))
 
-(defn get-user-by-name
-  [name]
-  )
+(defn find-user-by-username
+  [username]
+  ; TODO: does this properly escape?
+  (first (query db-spec ["SELECT * FROM users WHERE username = ?" username])))
 
 (defn add-user!
-  [& user]
+  [user]
   (insert! db-spec :users user))
