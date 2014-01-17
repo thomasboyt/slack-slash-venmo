@@ -17,5 +17,10 @@
   (route/resources "/")
   (route/not-found "Not Found"))
 
+(defn start [port]
+  (run-jetty #'app-routes {:port port :join? false}))
+
 (defn -main []
-  (run-jetty #'app-routes {:port 8080 :join? false}))
+  (let [port (Integer/parseInt
+               (or (System/getenv "PORT") "8080"))]
+  (start port)))
