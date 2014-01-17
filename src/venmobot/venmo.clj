@@ -8,6 +8,14 @@
   {:cookies {"slack_username" {:value username} "slack_token" {:value token}}
    :body (format "Hey, you need to authenticate with Venmo before you can send money! Click here: https://api.venmo.com/v1/oauth/authorize?client_id=%s&scope=make_payments&response_type=code" (System/getenv "VENMO_CLIENT_ID"))})
  
+
+;; TODO:
+;; I need a way to auth incoming POST /venmo?username=..&token.. to confirm it's actually that user
+;; This is so that I can't forge a request to associate the wrong account - i.e. I could say
+;; username=Julian&token=whocares and associate my own account w/ Julian's Slack username
+;;
+;; Current token check does prevent other users from forging requests to make payments from an existing
+;; user, but registration needs to be fixed!
 (defn do-venmo-transaction
   [{form-params :form-params}]
   (if-let [paying-user (user/get-user (form-params "user_name") (form-params "token"))]
