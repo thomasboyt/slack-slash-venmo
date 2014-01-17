@@ -8,4 +8,6 @@
                  [compojure "1.1.6"]
                  [org.clojure/java.jdbc "0.3.2"]
                  [ring/ring-jetty-adapter "1.1.6"]
-                 [postgresql "9.1-901.jdbc4"]])
+                 [clj-http "0.7.8"]
+                 [postgresql "9.1-901.jdbc4"]
+                 [org.clojure/data.json "0.2.4"]])

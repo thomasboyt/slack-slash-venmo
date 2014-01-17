@@ -6,6 +6,7 @@
   (db-do-commands db-spec
     (create-table-ddl :users
                       [:username :text "PRIMARY KEY"]
+                      [:slacktoken :text "NOT NULL"]
                       [:venmoname :text "NOT NULL"]
                       [:venmoid :text "NOT NULL"]
                       [:accesstoken :text "NOT NULL"]
