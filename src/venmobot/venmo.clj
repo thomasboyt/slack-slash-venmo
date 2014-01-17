@@ -10,9 +10,7 @@
  
 (defn do-venmo-transaction
   [{form-params :form-params}]
-  ; first, look up current user in DB
   (if-let [paying-user (user/get-user (form-params "user_name") (form-params "token"))]
-    ; Return link to oauth view
     {:body "alright, now make a payment"}
     (render-oauth-link (form-params "user_name") (form-params "token"))))
 

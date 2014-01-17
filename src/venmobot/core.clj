@@ -10,8 +10,10 @@
 
 (defroutes app-routes
   (GET "/" [] "Hello World")
+
   (POST "/venmo" [] (wrap-cookies (wrap-params do-venmo-transaction)))
   (GET "/authed" [] (wrap-cookies (wrap-params oauth-callback)))
+
   (route/resources "/")
   (route/not-found "Not Found"))
 
