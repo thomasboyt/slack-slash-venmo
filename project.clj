@@ -4,6 +4,7 @@
   :main venmobot.core
   :ring {:handler venmobot.core/app-routes}
   :plugins [[lein-ring "0.8.10"]]
+  :min-lein-version "2.3.4"
   :dependencies [[org.clojure/clojure "1.5.1"]
                  [compojure "1.1.6"]
                  [org.clojure/java.jdbc "0.3.2"]
