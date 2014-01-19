@@ -6,7 +6,7 @@
 (defn render-oauth-link
   [username token]
   {:cookies {"slack_username" {:value username} "slack_token" {:value token}}
-   :status 401 :body (format "Hey, you need to authenticate with Venmo before you can send money! Click here: https://api.venmo.com/v1/oauth/authorize?client_id=%s&scope=make_payments&response_type=code" (System/getenv "VENMO_CLIENT_ID"))})
+   :status 401 :body (format "Hey, you need to <https://api.venmo.com/v1/oauth/authorize?client_id=%s&scope=make_payments&response_type=code|authenticate> before you can send money!" (System/getenv "VENMO_CLIENT_ID"))})
 
 ;; TODO:
 ;; I need a way to auth incoming POST /venmo?username=..&token.. to confirm it's actually that user
