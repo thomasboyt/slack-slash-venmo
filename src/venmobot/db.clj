@@ -19,6 +19,5 @@
 
 (def db-spec
   (merge {:classname "com.mysql.jdbc.Driver"
-          :subprotocol "postgresql"
-          :subname "//localhost:5432/venmobot"}
+          :subprotocol "postgresql"}
          (heroku-db)))
