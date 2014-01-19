@@ -10,7 +10,11 @@
                       [:venmoname :text "NOT NULL"]
                       [:venmoid :text "NOT NULL"]
                       [:accesstoken :text "NOT NULL"]
-                      [:refreshtoken :text "NOT NULL"])))
+                      [:refreshtoken :text "NOT NULL"])
+    (create-table-ddl :nonces
+                      [:username :text "NOT NULL"]
+                      [:slacktoken :text "NOT NULL"]
+                      [:nonce :text "PRIMARY KEY"])))
 
 (defn -main []
   (print "Creating database...") (flush)

@@ -10,4 +10,5 @@
                  [ring/ring-jetty-adapter "1.1.6"]
                  [clj-http "0.7.8"]
                  [postgresql "9.1-901.jdbc4"]
+                 [crypto-random "1.1.0"]
                  [org.clojure/data.json "0.2.4"]])
