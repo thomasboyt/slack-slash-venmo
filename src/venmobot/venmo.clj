@@ -35,9 +35,7 @@
   [{username "user_name" text "text" channel "channel_name"}]
   (if-let [args (parse-args text)]
     (make-payment username args channel)
-    {:status 400 :body "Bad arguments"})
-  (slack/send-message channel "Testing!")
-  {:status 200})
+    {:status 400 :body "Bad arguments"}))
 
 ;; TODO:
 ;; I need a way to auth incoming POST /venmo?username=..&token.. to confirm it's actually that user
