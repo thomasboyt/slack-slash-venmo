@@ -9,11 +9,29 @@
   [username token]
   (format "Hey, you need to <https://api.venmo.com/v1/oauth/authorize?client_id=%s&scope=make_payments&response_type=code&state=%s|authenticate> before you can send money!" (System/getenv "VENMO_CLIENT_ID") (user/insert-nonce! username token)))
 
-(defn make-payment
-  [username args channel]
+(defn success-message
+  [channel giver recipient amount note]
   (slack/send-message channel
-    (string/join ["[fake] @" username " just paid @" (args :recipient) " $" (args :amount) " for " (args :note)]))
+    (string/join ["[fake] @" giver
+                  " just paid @" recipient
+                  " $" amount
+                  " for " note]))
   {:status 200})
+
+(defn make-payment
+  [paying-user recipient args channel]
+  (let [resp (client/post "https://sandbox-api.venmo.com/v1/payments"
+               {:form-params {"access_token" (paying-user :accesstoken)
+                              "user_id" (recipient :venmoid)
+                              "amount" (args :amount)
+                              "note" (args :note)}
+                :throw-exceptions false})]
+    (cond (= (resp :status) 400)
+          (format "Error making payment: %s" (((json/read-str (resp :body)) "error") "message"))
+          (= (resp :status) 200)
+          (success-message channel (paying-user :username) (recipient :username) (args :amount) (args :note))
+          :else
+          "Unknown error making payment, sorry :<")))
 
 (defn parse-args
   [text]
@@ -23,7 +41,7 @@
                       (subs (pieces 0) 1 (count (pieces 0)))
                       :else
                       (pieces 0))
-     ;; TODO validate this bit
+     ;; TODO validate this bit, remove $
      :amount (pieces 1)
      ;; support either "julian 1.00 for foo" or "julian 1.00 foo"
      :note  (cond (= (pieces 2) "for")
@@ -32,9 +50,11 @@
                   (string/join " " (drop 2 pieces)))}))
 
 (defn try-payment
-  [{username "user_name" text "text" channel "channel_name"}]
+  [user {text "text" channel "channel_name"}]
   (if-let [args (parse-args text)]
-    (make-payment username args channel)
+    (if-let [recipient (user/get-user (args :recipient))]
+      (make-payment user recipient args channel)
+      {:status 400 :body (format "@%s hasn't registered their Venmo account yet" (args :recipient))})
     {:status 400 :body "Bad arguments"}))
 
 ;; TODO:
@@ -47,8 +67,8 @@
  
 (defn do-venmo-transaction
   [{form-params :form-params}]
-  (if-let [paying-user (user/get-user (form-params "user_name") (form-params "token"))]
-    (try-payment form-params)
+  (if-let [paying-user (user/get-user-with-token (form-params "user_name") (form-params "token"))]
+    (try-payment paying-user form-params)
     (render-oauth-link (form-params "user_name") (form-params "token"))))
 
 (defn oauth-callback

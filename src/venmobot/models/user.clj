@@ -4,10 +4,13 @@
             [crypto.random :as random]))
 
 ;; Users
-(defn get-user
+(defn get-user-with-token
   [username token]
-  ; TODO: does this properly escape?
   (first (query db-spec ["SELECT * FROM users WHERE username = ? AND slacktoken = ?" username token])))
+
+(defn get-user
+  [username]
+  (first (query db-spec ["SELECT * FROM users WHERE username = ?" username])))
 
 (defn add-user!
   [user]
@@ -16,6 +19,7 @@
 ;; Nonces - used to hold state when authenticating as an alternative to cookies/sessions
 ;; Doing /venmo for the first time -> link is created to oauth with ?state=nonce
 ;; Then, when authenticated, lookup nonce for stored username/token and delete
+;; TODO: Add created timestamp & script to clear out nonces that are >1h old
 
 (defn insert-nonce!
   [username token]
