@@ -5,6 +5,12 @@
             [clj-http.client :as client]
             [clojure.data.json :as json]))
 
+(def payment-endpoint
+  (cond (= (System/getenv "SANDBOX") "true")
+        "https://sandbox-api.venmo.com/v1/payments"
+        :else
+        "https://api.venmo.com/v1/payments"))
+
 (defn render-oauth-link
   [username token]
   (format "Hey, you need to <https://api.venmo.com/v1/oauth/authorize?client_id=%s&scope=make_payments&response_type=code&state=%s|authenticate> before you can send money!" (System/getenv "VENMO_CLIENT_ID") (user/insert-nonce! username token)))
@@ -20,7 +26,7 @@
 
 (defn make-payment
   [paying-user recipient args channel]
-  (let [resp (client/post "https://sandbox-api.venmo.com/v1/payments"
+  (let [resp (client/post payment-endpoint
                {:form-params {"access_token" (paying-user :accesstoken)
                               "user_id" (recipient :venmoid)
                               "amount" (args :amount)
