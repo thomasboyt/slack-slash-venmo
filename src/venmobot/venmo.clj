@@ -12,7 +12,7 @@
 (defn make-payment
   [username args channel]
   (slack/send-message channel
-    (string/join ["[fake] @" username " just paid " (args :recipient) " $" (args :amount) " for " (args :note)]))
+    (string/join ["[fake] @" username " just paid @" (args :recipient) " $" (args :amount) " for " (args :note)]))
   {:status 200})
 
 (defn parse-args

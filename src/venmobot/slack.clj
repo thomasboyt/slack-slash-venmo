@@ -17,6 +17,7 @@
                        {:text message 
                         :channel (format-channel-name channel)
                         :username "venmobot"
+                        :parse "full"
                         ;; TODO: probably move this image off imgur/make it not fucking huge
                         "icon_url" "http://i.imgur.com/JknSeiD.png"})]
     (client/post webhook-url
